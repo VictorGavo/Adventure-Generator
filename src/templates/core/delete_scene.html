@@ -1,0 +1,11 @@
+{% extends '_base.html' %}
+
+{% block content %}
+  <h2>Delete Biome</h2>
+  <p>Are you sure you want to delete the "{{ scene.name }}" scene?</p>
+  <form method="POST" action="{{ url_for('core.delete_scene', biome_id=biome.id, scene_id=scene.id) }}">
+    {{ form.hidden_tag() }}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{{ url_for('core.scenes', biome_id=biome.id) }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

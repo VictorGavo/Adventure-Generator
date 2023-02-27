@@ -1,0 +1,54 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<main class="content">
+  <div class="d-flex justify-content-space-between align-items-center mb-3">
+    <h2>Biomes</h2>
+    <a href="{{ url_for('core.create_biome') }}" class="btn btn-primary">
+        Add a Biome
+    </a>
+  </div>
+  <div class="container">
+    <div class="row">
+      {% for biome in biomes %}
+        <div class="col-md-3 mb-5">
+          <div class="card border-0 shadow-sm h-100 text-center">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title text-uppercase">{{ biome.name }}</h5>
+                <p class="card-text">{{ biome.description }}</p>
+              </div>
+              <div class="text-center">
+                <a href="{{ url_for('core.edit_biome', biome_id=biome.id) }}" class="btn btn-secondary mb-2">
+                  Edit
+                </a>
+                <form action="{{ url_for('core.delete_biome', biome_id=biome.id) }}" method="post">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn btn-danger">
+                    Delete
+                  </button>
+                </form>
+                <a href="{{ url_for('core.scenes', biome_id=biome.id) }}" class="btn btn-primary">View Scenes</a>
+              </div>
+              <div class="card-footer">
+                <a href="{{ url_for('core.encounter', biome_id=biome.id) }}" class="btn btn-primary">Generate {{ biome.name }} Encounter</a>
+            </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+          <a href="{{ url_for('core.generate_random_encounter') }}" class="btn btn-primary btn-lg btn-block">Generate Random Encounter</a>
+      </div>
+  </div>
+  </div>
+</main>
+{% endblock %}
+
+
+
+
+
+

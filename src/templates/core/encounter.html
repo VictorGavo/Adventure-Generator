@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="encounter-container">
+        <div class="encounter-img">
+            <img src="{{ img_url }}" alt="Encounter Image">
+        </div>
+        <div class="encounter-info">
+            <h2>Encounter Description</h2>
+            <p>{{ scene.description }}</p>
+            <h2>Encounter Creature</h2>
+            <p>{{ scene.creature }}</p>
+            <p>{{ monster['name'] }}</p>
+        </div>
+    </div>
+{% endblock %}
