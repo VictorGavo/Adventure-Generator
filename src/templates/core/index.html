@@ -1,6 +1,39 @@
 {% extends "_base.html" %}
+
 {% block content %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Welcome to Victor's Variable Ventures!</h1>
+      <p class="lead">Create and manage biomes for your TTRPG game.</p>
+      <hr class="my-4">
+      <p>With VVV, you can easily generate random encounters based on your biomes and prompts.</p>
+      <a class="btn btn-primary btn-lg" href="{{ url_for('core.biomes') }}" role="button">Get started</a>
+    </div>
+  </div>
 
-<h1 class="text-center">Welcome {{current_user.email}}!</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Create Biomes</h2>
+        <p>Define locales in your TTRPG game as biomes, complete with descriptions and encounter prompts.</p>
+        <p><a class="btn btn-secondary" href="{{ url_for('core.biomes') }}" role="button">Learn more &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h2>Add Encounters</h2>
+        <p>Build out your biomes by adding encounters, with varying levels of difficulty and rewards.</p>
+        <p><a class="btn btn-secondary" href="#" role="button">Learn more &raquo;</a></p>
+      </div>
+      <div class="col-md-4">
+        <h2>Generate Random Encounters</h2>
+        <p>Generate unique and exciting encounters based on your biomes and prompts, for endless gameplay possibilities.</p>
+        <p><a class="btn btn-secondary" href="{{ url_for('core.generate_random_encounter') }}" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
 
+    <hr>
+
+    <footer>
+      <p>&copy; 2023 Victor's Variable Ventures, Inc.</p>
+    </footer>
+  </div>
 {% endblock %}

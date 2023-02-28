@@ -1,9 +1,177 @@
-.error {
-    color: red;
-    margin-bottom: 5px;
-    text-align: center;
-  }
-  
-  a {
-    text-decoration: none;
-  }
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+/* Colors */
+:root {
+  --primary-color: #8B0000;
+  --secondary-color: #F5DEB3;
+  --tertiary-color: #000000;
+  --quaternary-color: #FFFFFF;
+}
+/* Typography */
+
+body {
+  font-family: 'Old Standard TT', serif;
+  font-size: 16px;
+  color: #1f1f1f;
+  background-color: #f2e3c6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Old Standard TT', serif;
+  font-weight: bold;
+  color: #773300;
+}
+
+p {
+  line-height: 1.5;
+}
+
+/* Navigation */
+
+nav {
+  background-color: #000;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+}
+
+nav a {
+  color: #fff;
+  font-size: 18px;
+  margin-right: 20px;
+  text-transform: uppercase;
+}
+
+/* Buttons */
+
+button {
+  background-color: #773300;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Old Standard TT', serif;
+}
+
+button:hover {
+  background-color: #fff;
+  color: #773300;
+  border: 1px solid #773300;
+}
+
+/* Cards */
+
+.card {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+.card-title {
+  font-size: 24px;
+  color: #773300;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 16px;
+  color: #1f1f1f;
+}
+
+.card-footer {
+  background-color: #f2e3c6;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Forms */
+
+form label {
+  font-size: 18px;
+  color: #1f1f1f;
+}
+
+form input[type="text"], form textarea {
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  width: 100%;
+}
+
+form button[type="submit"] {
+  margin-top: 20px;
+}
+
+/* Alerts */
+
+.alert {
+  margin-bottom: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #fff;
+}
+
+.alert-success {
+  background-color: #28a745;
+}
+
+.alert-danger {
+  background-color: #dc3545;
+}
+
+/* Utility classes */
+
+.text-center {
+  text-align: center;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
+}
+
+.mb-5 {
+  margin-bottom: 50px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #773300;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Old Standard TT', serif;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: #fff;
+  color: #773300;
+  border: none;
+}
