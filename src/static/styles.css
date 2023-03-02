@@ -11,6 +11,9 @@
 /* Typography */
 
 body {
+  background-image: url('ryutaro-uozumi-cobblewall-1-unsplash.jpg');
+  background-size: cover;
+  background-position: center center;
   font-family: 'Old Standard TT', serif;
   font-size: 16px;
   color: #1f1f1f;
@@ -43,6 +46,14 @@ nav a {
   text-transform: uppercase;
 }
 
+/* Container */
+.custom {
+  background-color: #f2e3c6;
+  opacity: 0.9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+} 
 /* Buttons */
 
 button {

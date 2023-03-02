@@ -27,6 +27,8 @@ class Biome(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
+    scene = db.relationship("Scene", cascade="all, delete-orphan")
+
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __init__(self, name, description, user_id):
