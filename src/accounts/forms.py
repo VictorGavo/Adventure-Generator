@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, StringField, SubmitField, TextAreaField
+from wtforms import EmailField, PasswordField, StringField, SubmitField, TextAreaField, HiddenField
 
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
@@ -39,11 +39,15 @@ class RegisterForm(FlaskForm):
         return True
     
 class SceneForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
-    creature = TextAreaField('Creature', validators=[DataRequired()])
-
+    name = HiddenField('Name')
+    focus = StringField('Focus', validators=[DataRequired()])
+    vibe = StringField('Vibe', validators=[DataRequired()])
     submit_button = SubmitField()
+
+class SceneEditForm(FlaskForm):
+    box_text = TextAreaField('Boxed Text', validators=[DataRequired()])
+    image_text = TextAreaField('Image Text', validators=[DataRequired()])
+    submit = SubmitField('Save')
 
 class BiomeForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])

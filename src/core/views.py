@@ -10,7 +10,7 @@ from python_graphql_client import GraphqlClient
 
 from src import db
 from src.accounts.models import User, Biome, Scene
-from src.accounts.forms import BiomeForm, SceneForm
+from src.accounts.forms import BiomeForm, SceneForm, SceneEditForm
 
 
 core_bp = Blueprint("core", __name__)
@@ -89,21 +89,21 @@ def create_scene(biome_id):
     biome = Biome.query.get_or_404(biome_id)
 
     if form.validate_on_submit():
-        scene = Scene(name=form.name.data,
-                      description=form.description.data,
-                      biome_id=biome_id,
-                      creature=form.creature.data)
+        scene = Scene(focus=form.focus.data, vibe=form.vibe.data, biome_id=biome_id)
         db.session.add(scene)
+        scene.generate_description(biome)
         db.session.commit()
         flash('Scene created successfully!', 'success')
         return redirect(url_for('core.scenes', biome_id=biome_id, biome=biome))
+    else:
+        flash(form.errors)
 
     return render_template('core/create_scene.html', form=form, biome_id=biome_id, biome=biome)
 
 @core_bp.route('/biome/<int:biome_id>/scenes/<int:scene_id>/edit', methods=['GET', 'POST'])
 def edit_scene(biome_id, scene_id):
     scene = Scene.query.get_or_404(scene_id)
-    form = SceneForm(obj=scene)
+    form = SceneEditForm(obj=scene)
     biome = Biome.query.get_or_404(biome_id)
 
     if form.validate_on_submit():
@@ -127,36 +127,25 @@ def delete_scene(biome_id, scene_id):
     return redirect(url_for("core.scenes", biome_id=biome_id))
 
 #######################################################################Encounter
-query ='''
-query Query($skip: Int) {
-  monsters (limit: $skip) {
-    name
-  }
-}
-''' 
-
 
 @core_bp.route("/encounter/<int:biome_id>")
 @login_required
-def encounter(biome_id):
-
-    variables = { "skip": 400 }
-    creature_stats = client.execute(query, variables)
-    monster = random.choice(creature_stats["data"]["monsters"])
-
-    # Select a random scene
-    scenes = Scene.query.filter_by(biome_id=biome_id).all()
-    scene = random.choice(scenes)
+def encounter(biome_id, scene_id=None):
+    if scene_id is not None:
+        scene = Scene.query.get_or_404(scene_id)
+    else:
+        scenes = Scene.query.filter_by(biome_id=biome_id).all()
+        scene = random.choice(scenes)
 
     response = openai.Image.create(
-        # prompt=f'A digital illustration of {description}, 4k, detailed, trending in artstation, fantasy',
-        prompt=f"A digital illustration, 4k, detailed, trending in artstation, fantasy | {scene.description} with a {monster['name']} present",
+        prompt=f"A digital illustration, 4k, detailed, trending in artstation, fantasy | {scene.image_text}",
         n=1,
         size="512x512"
     )
     img_url = response['data'][0]['url']
-    
-    return render_template("core/encounter.html", scene=scene, img_url=img_url, monster=monster)
+
+    return render_template("core/encounter.html", scene=scene, img_url=img_url)
+
 
 
 @core_bp.route('/encounter/random')
@@ -164,3 +153,4 @@ def generate_random_encounter():
     biomes = Biome.query.all()
     biome = random.choice(biomes)
     return redirect(url_for('core.encounter', biome_id=biome.id))
+

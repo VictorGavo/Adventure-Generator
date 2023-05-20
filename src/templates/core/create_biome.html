@@ -1,6 +1,7 @@
 {% extends '_base.html' %}
 
 {% block content %}
+<div class="custom">
   <h2>Create Biome</h2>
   <form method="POST" action="{{ url_for('core.create_biome') }}">
     {{ form.hidden_tag() }}
@@ -18,4 +19,5 @@
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
   </form>
+</div>
 {% endblock %}
