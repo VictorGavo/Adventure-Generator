@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     created_on = db.Column(db.DateTime, nullable=False)
+    biomes = db.relationship("Biome", backref="user", lazy=True)
 
     def __init__(self, email, password):
         self.email = email
@@ -49,6 +50,7 @@ class Scene(db.Model):
     vibe = db.Column(db.String, nullable=False)
     box_text = db.Column(db.String)
     image_text = db.Column(db.String)
+    shared = db.Column(db.Boolean, default=False)
 
     def __init__(self, focus, biome_id, vibe):
         self.focus = focus

@@ -187,3 +187,17 @@ form button[type="submit"] {
   color: #773300;
   border: none;
 }
+
+.encounter-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.encounter-img {
+  flex-basis: 50%;
+  opacity: 1;
+}
+
+.encounter-info {
+  flex-basis: 50%;
+}

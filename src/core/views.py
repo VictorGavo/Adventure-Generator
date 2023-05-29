@@ -1,7 +1,7 @@
 import os
 import random
 
-from flask import Blueprint, render_template, redirect, url_for, flash, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required, current_user
 
 import openai
@@ -34,8 +34,10 @@ def home():
 @login_required
 def biomes():
     if current_user.is_authenticated:
+        user = current_user
         biomes = Biome.query.filter_by(user_id=current_user.id).all()
-        return render_template('core/biomes.html', biomes=biomes)
+        shared_scenes = Scene.query.filter_by(shared=True).all()
+        return render_template('core/biomes.html', biomes=biomes, shared_scenes=shared_scenes, user=user)
     
 @core_bp.route("/biomes/new", methods=["GET", "POST"])
 @login_required
@@ -100,6 +102,27 @@ def create_scene(biome_id):
 
     return render_template('core/create_scene.html', form=form, biome_id=biome_id, biome=biome)
 
+@core_bp.route('/add_to_biome/<int:scene_id>', methods=['POST'])
+@login_required
+def add_to_biome(scene_id):
+    selected_biome_id = request.form.get('biome_id')
+    selected_biome = Biome.query.get(selected_biome_id)
+    shared_scene = Scene.query.get(scene_id)
+
+    # Create a new scene for user
+    new_scene = Scene(
+        focus=shared_scene.focus,
+        vibe=shared_scene.vibe,
+        biome_id=selected_biome_id
+    )
+
+    db.session.add(new_scene)
+    new_scene.generate_description(selected_biome)
+    db.session.commit()
+
+    flash('Scene added to biome successfully', 'success')
+    return redirect(url_for('core.biomes'))
+
 @core_bp.route('/biome/<int:biome_id>/scenes/<int:scene_id>/edit', methods=['GET', 'POST'])
 def edit_scene(biome_id, scene_id):
     scene = Scene.query.get_or_404(scene_id)
@@ -126,6 +149,15 @@ def delete_scene(biome_id, scene_id):
     flash("Scene deleted!", "success")
     return redirect(url_for("core.scenes", biome_id=biome_id))
 
+@core_bp.route("/biome/<biome_id>/scene/<scene_id>/share", methods=["POST"])
+def share_scene(biome_id, scene_id):
+    scene = Scene.query.get_or_404(scene_id)
+    scene.shared = True
+    db.session.commit()
+    flash('Scene shared successfully.', 'success')
+    return redirect(url_for('core.biomes', biome_id=biome_id))
+
+
 #######################################################################Encounter
 
 @core_bp.route("/encounter/<int:biome_id>")
@@ -138,7 +170,7 @@ def encounter(biome_id, scene_id=None):
         scene = random.choice(scenes)
 
     response = openai.Image.create(
-        prompt=f"A digital illustration, 4k, detailed, trending in artstation, fantasy | {scene.image_text}",
+        prompt=f"A magic realism illustration, 4k, detailed, trending in artstation, fantasY2k | {scene.image_text}",
         n=1,
         size="512x512"
     )
