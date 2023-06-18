@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="custom">
+  <h2>Edit {{ biome.name }} Scene</h2>
+  <form method="POST" action="{{ url_for('core.edit_scene', biome_id=biome_id, scene_id=scene.id) }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.box_text.label }} {{ form.box_text(class='form-control') }}
+      {% for error in form.box_text.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+        {{ form.image_text.label }} {{ form.image_text(class='form-control') }}
+        {% for error in form.image_text.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

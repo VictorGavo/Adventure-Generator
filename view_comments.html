@@ -1,0 +1,145 @@
+{% extends '_base.html' %}
+
+{% block title %}View Comments{% endblock %}
+
+{% block content %}
+<section class="content custom">
+  <div class="container">
+    <h2>{{ scene.vibe.title() }} {{ scene.biome.name.title() }} {{ scene.focus.title() }}</h2>
+    <div class="encounter-container">
+      <div class="encounter-img">
+        <img src="{{ scene.image_url }}" alt="Encounter Image">
+      </div>
+      <div class="encounter-info">
+        <p>{{ scene.box_text }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="content custom">
+  <div class="container">
+    <h4>Comments:</h4>
+    <div class="mt-3">
+      <form action="{{ url_for('core.add_comment', scene_id=scene.id) }}" method="post" class="d-flex align-items-center">
+        <input type="text" name="comment" class="form-control me-2" placeholder="Add a comment" required>
+        <button type="submit" class="btn btn-primary">Post</button>
+      </form>
+    </div>
+    {% if comments %}
+    <div class="row">
+      {% for comment in comments %}
+      <div class="col-md-4 mb-5 comment" data-comment-id="{{ comment.id }}">
+        <div class="card border-0 shadow-sm h-100 text-center">
+          {% if comment.user == current_user %}
+          <div class="comment-actions">
+            <button class="edit-comment-btn">Edit</button>
+            <button class="delete-comment-btn">Delete</button>
+          </div>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title text-uppercase">{{ comment.username }}</h5>
+            <p class="card-text">{{ comment.text }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>No comments yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script>
+  // Get all delete buttons
+  const deleteButtons = document.querySelectorAll('.delete-comment-btn');
+
+  // Add event listener to each delete button
+  deleteButtons.forEach(button => {
+    const commentId = button.closest('.comment').dataset.commentId;
+
+    button.addEventListener('click', () => {
+      // Send AJAX request to delete the comment
+      fetch(`/delete_comment/${commentId}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response
+          if (data.message === 'Comment deleted') {
+            // Comment deleted successfully, update the view
+            const commentElement = button.closest('.comment');
+            commentElement.remove();
+          } else {
+            // Display an error message
+            console.error(data.message);
+          }
+        })
+        .catch(error => {
+          console.error('An error occurred', error);
+        });
+    });
+  });
+
+  // Get all edit buttons
+  const editButtons = document.querySelectorAll('.edit-comment-btn');
+
+  // Add event listener to each edit button
+  editButtons.forEach(button => {
+    const commentElement = button.closest('.comment');
+    const commentId = commentElement.dataset.commentId;
+    const commentTextElement = commentElement.querySelector('.card-text');
+    const previousCommentText = commentTextElement.textContent;
+
+    button.addEventListener('click', () => {
+      // Enable comment editing
+      commentTextElement.contentEditable = true;
+      commentTextElement.focus();
+
+      // Change button text to 'Save'
+      button.textContent = 'Save';
+
+      // Change button color to indicate editing mode
+      button.classList.add('btn-primary');
+
+      button.addEventListener('click', () => {
+        const updatedCommentText = commentTextElement.textContent.trim();
+
+        // Send AJAX request to update the comment
+        fetch(`/update_comment/${commentId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ commentText: updatedCommentText })
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Handle the response
+            if (data.message === 'Comment updated') {
+              // Disable comment editing
+              commentTextElement.contentEditable = false;
+
+              // Change button text back to 'Edit'
+              button.textContent = 'Edit';
+
+              // Remove editing mode color from button
+              button.classList.remove('btn-primary');
+            } else {
+              // Display an error message
+              console.error(data.message);
+            }
+          })
+          .catch(error => {
+            console.error('An error occurred', error);
+          });
+      });
+    });
+  });
+</script>
+{% endblock %}
